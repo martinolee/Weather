@@ -267,3 +267,11 @@ extension ViewController: CLLocationManagerDelegate {
         print(error)
     }
 }
+
+extension ViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let y = scrollView.contentOffset.y
+        
+        print(y)
+    }
+}
