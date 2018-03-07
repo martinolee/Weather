@@ -177,6 +177,7 @@
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="AS2-yp-UpG"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="4Rn-nM-vXb"/>
                                 </connections>
                             </tableView>
                         </subviews>

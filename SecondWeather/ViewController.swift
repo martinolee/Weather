@@ -14,6 +14,8 @@ import SwiftyJSON
 class ViewController: UIViewController {
     @IBOutlet weak var locationLabel: UILabel!
     
+    var whiteMode = false
+    
     lazy var locationManager: CLLocationManager = {
         let m = CLLocationManager()
         m.delegate = self
@@ -273,5 +275,23 @@ extension ViewController: UIScrollViewDelegate {
         let y = scrollView.contentOffset.y
         
         print(y)
+        
+        if y <= -30 {
+            if !whiteMode {
+                whiteMode = true
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.locationLabel.alpha = 1.0
+                })
+            }
+        } else {
+            if whiteMode {
+                whiteMode = false
+                
+                UIView.animate(withDuration: 0.3, animations: {
+                    self.locationLabel.alpha = 0.0
+                })
+            }
+        }
     }
 }
