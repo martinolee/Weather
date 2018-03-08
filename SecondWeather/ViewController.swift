@@ -242,6 +242,9 @@ extension ViewController: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        let first = IndexPath(row: 0, section: 0)
+        self.listTableView.scrollToRow(at: first, at: .top, animated: false)
+        
         if let loc = locations.first {
             let decoder = CLGeocoder()
             decoder.reverseGeocodeLocation(loc, completionHandler: { (placemarks, error) in
