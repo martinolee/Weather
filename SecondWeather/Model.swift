@@ -27,25 +27,19 @@ struct WeatherSummary {
     init?(json: JSON) {
         print(json)
         
-        guard let info = json["weather"].dictionary?["minutely"]?.array?.first else { fatalError() }
-        
-        guard let sky = info["sky"].dictionary else { fatalError() }
-        
-        guard let name = sky["name"]?.string else { fatalError() }
+        guard let name = json["weather"]["minutely"][0]["sky"]["name"].string else { fatalError() }
         skyName = name
         
-        guard let code = sky["code"]?.string else { fatalError() }
+        guard let code = json["weather"]["minutely"][0]["sky"]["code"].string else { fatalError() }
         skyCode = code
         
-        guard let temperature = info["temperature"].dictionary else { fatalError() }
-        
-        guard let current = temperature["tc"]?.string else { fatalError() }
+        guard let current = json["weather"]["minutely"][0]["temperature"]["tc"].string else { fatalError() }
         tempCurrent = Double(current) ?? 0.0
         
-        guard let max = temperature["tmax"]?.string else { fatalError() }
+        guard let max = json["weather"]["minutely"][0]["temperature"]["tmax"].string else { fatalError() }
         tempMax = Double(max) ?? 0.0
         
-        guard let min  = temperature["tmin"]?.string else { fatalError() }
+        guard let min  = json["weather"]["minutely"][0]["temperature"]["tmin"].string else { fatalError() }
         tempMin = Double(min) ?? 0.0
     }
 }

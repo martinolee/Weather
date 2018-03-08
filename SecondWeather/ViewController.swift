@@ -105,10 +105,6 @@ class ViewController: UIViewController {
             
             let json = JSON(data)
             
-            guard let fdata = json["weather"].dictionary?["forecast3days"]?.array?.first?["fcst3hour"] else {
-                return
-            }
-            
             self?.forecast.removeAll()
             
             let comps = Calendar.current.dateComponents([.month, .day, .hour], from: Date())
@@ -117,29 +113,27 @@ class ViewController: UIViewController {
                 return
             }
             
-            var hour = 4
-            
-            while hour <= 67 {
-                defer {
-                    hour += 3
+            if let forecastDict = json["weather"]["forecast3days"][0]["fcst3hour"].dictionary {
+                var hour = 4
+                
+                while hour <= 67 {
+                    defer {
+                        hour += 3
+                    }
+                    guard let skyName = forecastDict["sky"]?["name\(hour)hour"].string, skyName.count > 0 else { continue }
+                    
+                    guard let skyCode = forecastDict["sky"]?["code\(hour)hour"].string, skyCode.count > 0 else { continue }
+                    
+                    guard let temperature = forecastDict["temperature"]?["temp\(hour)hour"].string, temperature.count > 0 else { continue }
+                    
+                    let dbl = Double(temperature) ?? 0.0
+                    
+                    let dt = now.addingTimeInterval(TimeInterval(hour * 3600))
+                    
+                    let newData = Forecast(date: dt, skyName: skyName, skyCode: skyCode, temperature: dbl)
+                    
+                    self?.forecast.append(newData)
                 }
-                guard let sky = fdata["sky"].dictionary else { continue }
-                
-                guard let skyName = sky["name\(hour)hour"]?.string, skyName.count > 0 else { continue }
-                
-                guard let skyCode = sky["code\(hour)hour"]?.string, skyCode.count > 0 else { continue }
-                
-                guard let temp = fdata["temperature"].dictionary else { continue }
-                
-                guard let strVal = temp["temp\(hour)hour"]?.string else { continue }
-                
-                let dbl = Double(strVal) ?? 0.0
-                
-                let dt = now.addingTimeInterval(TimeInterval(hour * 3600))
-                
-                let newData = Forecast(date: dt, skyName: skyName, skyCode: skyCode, temperature: dbl)
-                
-                self?.forecast.append(newData)
             }
             DispatchQueue.main.async {
                 self?.listTableView.reloadData()
@@ -273,8 +267,6 @@ extension ViewController: CLLocationManagerDelegate {
 extension ViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let y = scrollView.contentOffset.y
-        
-        print(y)
         
         if y <= -30 {
             if !whiteMode {
